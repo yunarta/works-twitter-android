@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Twitter Status"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/btn_open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Session" />
+
+    <Button
+        android:id="@+id/btn_validate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Validate Session" />
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Close Session" />
+
+    <EditText
+        android:id="@+id/status_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:hint="Status Update"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
+    <Button
+        android:id="@+id/btn_request1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Request" />
+
+    <Button
+        android:id="@+id/btn_request2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Request 2" />
+
+    <Button
+        android:id="@+id/btn_request3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Request Me" />
+
+</LinearLayout>
