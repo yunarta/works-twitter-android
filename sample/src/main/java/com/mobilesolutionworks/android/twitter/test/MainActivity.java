@@ -78,7 +78,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 StatusUpdate request = new StatusUpdate(id.getText().toString());
                 mTwitter.tweets(request, new WorksTwitter.ResponseCallback() {
                     @Override
-                    public void onCancelled() {
+                    public void onCancelled(Exception error) {
 
                     }
 
