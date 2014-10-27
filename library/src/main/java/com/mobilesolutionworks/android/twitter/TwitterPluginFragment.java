@@ -91,6 +91,7 @@ public class TwitterPluginFragment extends Fragment implements WorksTwitter {
                 mAccessToken = SerializationUtils.deserialize(decode);
             }
         }
+
     }
 
     @Override
@@ -246,16 +247,17 @@ public class TwitterPluginFragment extends Fragment implements WorksTwitter {
                 } else {
                     return Task.forResult(mAccessToken);
                 }
+//            }
+//        }).onSuccessTask(new Continuation<AccessToken, Task<Map<String, RateLimitStatus>>>() {
+//            @Override
+//            public Task<Map<String, RateLimitStatus>> then(Task<AccessToken> task) throws Exception {
+//                return doCheckStatus(instance);
             }
-        }).onSuccessTask(new Continuation<AccessToken, Task<Map<String, RateLimitStatus>>>() {
+        }).onSuccessTask(new Continuation<AccessToken, Task<Status>>() {
             @Override
-            public Task<Map<String, RateLimitStatus>> then(Task<AccessToken> task) throws Exception {
-                return doCheckStatus(instance);
-            }
-        }).onSuccessTask(new Continuation<Map<String, RateLimitStatus>, Task<Status>>() {
-            @Override
-            public Task<Status> then(Task<Map<String, RateLimitStatus>> task) throws Exception {
-                Map<String, RateLimitStatus> result = task.getResult();
+            public Task<Status> then(Task<AccessToken> task) throws Exception {
+//                Map<String, RateLimitStatus> result = task.getResult();
+
                 return doTweet(instance, latestStatus);
             }
         }).continueWith(new Continuation<Status, Object>() {
