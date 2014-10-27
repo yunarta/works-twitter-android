@@ -1,20 +1,16 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.2'
-    }
-}
 apply plugin: 'com.android.application'
 
-repositories {
-    mavenCentral()
-}
-
 android {
-    compileSdkVersion 20
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.0.2"
+
+    def androidTargetSdkVersion = compileSdkVersion
+
+    if (project.hasProperty('androidConfiguration')) {
+        compileSdkVersion Integer.parseInt(project.androidCompileSdkVersion)
+        buildToolsVersion project.androidBuildToolsVersion
+        androidTargetSdkVersion = project.androidTargetSdkVersion
+    }
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -23,20 +19,26 @@ android {
     defaultConfig {
         applicationId "com.mobilesolutionworks.android.twitter"
         minSdkVersion 9
-        targetSdkVersion 20
+        targetSdkVersion androidTargetSdkVersion
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
         release {
             runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (runProguard) {
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            }
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    def androidSupportVersion = "21.0.0"
+    if (project.hasProperty('androidConfiguration')) {
+        androidSupportVersion = project.androidSupportVersion
+    }
+
+    compile 'com.android.support:appcompat-v7:' + androidSupportVersion
     compile project(':works-twitter-android')
-    compile 'com.android.support:appcompat-v7:20.0.0'
 }
