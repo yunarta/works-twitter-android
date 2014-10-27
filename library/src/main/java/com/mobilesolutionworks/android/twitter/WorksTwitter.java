@@ -38,7 +38,7 @@ public interface WorksTwitter {
 
     interface ResponseCallback {
 
-        void onCancelled();
+        void onCancelled(Exception error);
 
         void onCompleted(Status status);
     }

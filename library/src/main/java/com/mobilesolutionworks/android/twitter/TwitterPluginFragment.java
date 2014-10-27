@@ -25,7 +25,6 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -135,7 +134,7 @@ public class TwitterPluginFragment extends Fragment implements WorksTwitter {
                         public AccessToken then(Task<AccessToken> task) throws Exception {
                             if (task.isFaulted()) {
                                 Log.d(BuildConfig.DEBUG_TAG, "Failed", task.getError());
-                                Toast.makeText(getActivity(), task.getError().getMessage(), Toast.LENGTH_LONG).show();
+//                                Toast.makeText(getActivity(), task.getError().getMessage(), Toast.LENGTH_LONG).show();
                                 callback.onCancelled();
                             } else if (task.isCompleted()) {
                                 AccessToken accessToken = task.getResult();
@@ -206,12 +205,13 @@ public class TwitterPluginFragment extends Fragment implements WorksTwitter {
             @Override
             public Task<AccessToken> then(Task<User> task) throws Exception {
                 if (task.isFaulted()) {
+                    final Task<AccessToken>.TaskCompletionSource source = Task.<AccessToken>create();
                     SharedPreferences preferences = getActivity().getSharedPreferences("twitter", Activity.MODE_PRIVATE);
                     preferences.edit().clear().apply();
 
                     mAccessToken = null;
                     instance.setOAuthAccessToken(null);
-                    return doGetAuthenticationURL(instance).onSuccessTask(new Continuation<RequestToken, Task<Bundle>>() {
+                    doGetAuthenticationURL(instance).onSuccessTask(new Continuation<RequestToken, Task<Bundle>>() {
                         @Override
                         public Task<Bundle> then(Task<RequestToken> task) throws Exception {
                             return doDialogAuthentication(task.getResult());
@@ -226,8 +226,9 @@ public class TwitterPluginFragment extends Fragment implements WorksTwitter {
                         public AccessToken then(Task<AccessToken> task) throws Exception {
                             if (task.isFaulted()) {
                                 Log.d(BuildConfig.DEBUG_TAG, "Failed", task.getError());
-                                Toast.makeText(getActivity(), task.getError().getMessage(), Toast.LENGTH_LONG).show();
-                                callback.onCancelled();
+                                // Toast.makeText(getActivity(), task.getError().getMessage(), Toast.LENGTH_LONG).show();
+                                // callback.onCancelled(task.getError());
+                                source.trySetError(task.getError());
                             } else if (task.isCompleted()) {
                                 AccessToken accessToken = task.getResult();
                                 String serialized = Base64.encodeToString(SerializationUtils.serialize(accessToken), Base64.DEFAULT);
@@ -237,13 +238,14 @@ public class TwitterPluginFragment extends Fragment implements WorksTwitter {
                                 instance.setOAuthAccessToken(accessToken);
 
                                 mAccessToken = accessToken;
-
+                                source.trySetResult(mAccessToken);
                                 return accessToken;
                             }
 
                             return null;
                         }
                     });
+                    return source.getTask();
                 } else {
                     return Task.forResult(mAccessToken);
                 }
@@ -265,8 +267,11 @@ public class TwitterPluginFragment extends Fragment implements WorksTwitter {
             public Object then(Task<Status> task) throws Exception {
                 if (task.isFaulted()) {
                     Log.d(BuildConfig.DEBUG_TAG, "Failed", task.getError());
-                    Toast.makeText(getActivity(), task.getError().getMessage(), Toast.LENGTH_LONG).show();
-                    callback.onCancelled();
+                    String message = task.getError().getMessage();
+                    if (!TextUtils.isEmpty(message)) {
+//                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    }
+                    callback.onCancelled(task.getError());
                 } else if (task.isCompleted()) {
                     callback.onCompleted(task.getResult());
                 }
