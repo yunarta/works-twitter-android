@@ -40,5 +40,5 @@ dependencies {
     }
 
     compile 'com.android.support:appcompat-v7:' + androidSupportVersion
-    compile project(':works-twitter-android')
+    compile project(':works-twitter')
 }
