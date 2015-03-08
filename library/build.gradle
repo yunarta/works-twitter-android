@@ -17,7 +17,6 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.mobilesolutionworks.android.twitter"
         minSdkVersion 9
         targetSdkVersion androidTargetSdkVersion
         versionCode 1
