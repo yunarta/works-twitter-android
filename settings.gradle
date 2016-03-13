@@ -1,0 +1,26 @@
+def moduleName = "works-twitter"
+def moduleRoot = rootProject.projectDir
+def loadSmallApp = true
+
+def modulesFile = new File(rootProject.projectDir, "modules.json")
+if (modulesFile.exists()) {
+    def json = new groovy.json.JsonSlurper()
+    def configuration = json.parse(modulesFile)
+
+    configuration.modules.each {
+        module ->
+            if (module.name.equals(moduleName)) {
+                moduleRoot = new File(rootProject.projectDir, module.path)
+                loadSmallApp = module.smallapp == null || module.smallapp
+            }
+    }
+}
+
+include ':works-twitter'
+project(':works-twitter').projectDir = new File(moduleRoot, 'library')
+
+
+if (loadSmallApp) {
+    include ':works-twitter-sample'
+    project(':works-twitter-sample').projectDir = new File(moduleRoot, 'sample')
+}
